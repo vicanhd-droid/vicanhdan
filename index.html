@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,10 +9,122 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./assets/css.css">
+
+    <style>
+        /* CSS Giao diện nhập tên & Lời chúc Trung Thu */
+        .greeting-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Quicksand', sans-serif;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .greeting-title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 0 10px #e056fd, 0 0 20px #be2edd, 0 0 30px #be2edd;
+        }
+
+        .input-control-group {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        #customNameInput {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1.5px solid rgba(224, 86, 253, 0.6);
+            background: rgba(0, 0, 0, 0.4);
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            backdrop-filter: blur(5px);
+            width: 60%;
+            text-align: center;
+        }
+
+        #customNameInput::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: linear-gradient(135deg, #e056fd, #686de0);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(224, 86, 253, 0.6);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .toggle-btn:active {
+            transform: scale(0.95);
+        }
+
+        .name-display {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 2px;
+            text-shadow: 0 0 8px #e056fd, 0 0 15px #be2edd;
+            transition: all 0.3s ease;
+        }
+
+        .name-display.hidden {
+            display: none;
+        }
+
+        .footer-caption {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            font-family: 'Quicksand', sans-serif;
+            text-shadow: 0 0 8px rgba(224, 86, 253, 0.8);
+            pointer-events: none;
+            white-space: nowrap;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
     <div id="webgl-container"></div>
+
+    <!-- Khung tiêu đề & Nhập tên chúc Trung Thu -->
+    <div class="greeting-box" id="greetingBox">
+        <h1 class="greeting-title">🌕 Chúc Mừng Trung Thu</h1>
+        
+        <div class="input-control-group">
+            <input type="text" id="customNameInput" placeholder="Nhập tên của bạn..." value="Vi Canh Dần">
+            <button class="toggle-btn" id="toggleNameBtn" onclick="toggleNameVisibility()">✨ Hiện tên</button>
+        </div>
+
+        <div class="name-display hidden" id="nameDisplay">
+            🐰 <span id="displayNameText">Vi Canh Dần</span>
+        </div>
+    </div>
 
     <div class="top-bar">
         <button class="icon-btn" id="audio-btn" title="Bật/Tắt Nhạc"><i class="fas fa-music"></i></button>
@@ -20,6 +132,11 @@
     </div>
 
     <div class="click-hint">Chạm vào lồng đèn nhé</div>
+
+    <!-- Chú thích chân trang -->
+    <div class="footer-caption" id="footerCaption">
+        🐰 <span id="footerNameText">Vi Canh Dần</span> • Kéo màn hình để xoay cảnh 360° ✨
+    </div>
 
     <div class="wish-modal" id="wishModal">
         <div class="wish-card">
@@ -37,10 +154,37 @@
 
     <audio id="bgm" loop src="./assets/1.mp3"></audio>
     
-    
     <!-- Three.js & OrbitControls -->
     <script src="./assets/three.min.js"></script>
     <script src="./assets/OrbitControls.js"></script>
     <script src="./assets/script.js"></script>
+
+    <!-- Script xử lý logic Hiện/Ẩn tên -->
+    <script>
+        function toggleNameVisibility() {
+            const input = document.getElementById('customNameInput');
+            const nameDisplay = document.getElementById('nameDisplay');
+            const displayNameText = document.getElementById('displayNameText');
+            const footerNameText = document.getElementById('footerNameText');
+            const btn = document.getElementById('toggleNameBtn');
+
+            const enteredName = input.value.trim() !== '' ? input.value.trim() : 'Vi Canh Dần';
+
+            if (nameDisplay.classList.contains('hidden')) {
+                // Đang ẩn -> Chuyển sang HỆN
+                displayNameText.textContent = enteredName;
+                footerNameText.textContent = enteredName;
+                nameDisplay.classList.remove('hidden');
+                btn.textContent = '🙈 Ẩn tên';
+                btn.style.background = 'linear-gradient(135deg, #ff7675, #d63031)';
+            } else {
+                // Đang hiện -> Chuyển sang ẨN
+                nameDisplay.classList.add('hidden');
+                btn.textContent = '✨ Hiện tên';
+                btn.style.background = 'linear-gradient(135deg, #e056fd, #686de0)';
+            }
+        }
+    </script>
 </body>
-</html>
+        </html>
+    
