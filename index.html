@@ -11,6 +11,39 @@
     <link rel="stylesheet" href="./assets/css.css">
 
     <style>
+        /* CSS Thanh nút công cụ - Đẩy sang góc trên bên phải, lên lớp trên cùng */
+        .top-bar {
+            position: fixed !important;
+            top: 15px !important;
+            right: 15px !important;
+            left: auto !important;
+            transform: none !important;
+            z-index: 9999 !important; /* Đảm bảo nằm đè lên trên chữ */
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.9);
+        }
+
         /* CSS Giao diện nhập tên & Lời chúc Trung Thu */
         .greeting-box {
             position: absolute;
@@ -101,7 +134,7 @@
             display: none;
         }
 
-        /* --- Dòng chữ "Được tạo bởi: Vi Canh Dần" --- */
+        /* Dòng chữ "Tạo bởi: Vi Canh Dần" */
         .creator-signature {
             font-size: 14px;
             font-weight: 600;
@@ -138,6 +171,12 @@
 
     <div id="webgl-container"></div>
 
+    <!-- Thanh nút nhạc và reset góc nhìn nằm cố định ở góc trên bên phải -->
+    <div class="top-bar">
+        <button class="icon-btn" id="audio-btn" title="Bật/Tắt Nhạc"><i class="fas fa-music"></i></button>
+        <button class="icon-btn" id="reset-cam-btn" title="Góc nhìn ban đầu"><i class="fas fa-compress-arrows-alt"></i></button>
+    </div>
+
     <!-- Khung tiêu đề & Nhập tên chúc Trung Thu -->
     <div class="greeting-box" id="greetingBox">
         <h1 class="greeting-title">🌕 Chúc Mừng Trung Thu</h1>
@@ -157,15 +196,10 @@
             🐰 <span id="displayNameText">Vi Canh Dần</span>
         </div>
 
-        <!-- Dòng chữ "Tạo bởi" nổi bật -->
+        <!-- Dòng chữ "Tạo bởi" -->
         <div class="creator-signature">
             ✨ Tạo bởi: Vi Canh Dần ✨
         </div>
-    </div>
-
-    <div class="top-bar">
-        <button class="icon-btn" id="audio-btn" title="Bật/Tắt Nhạc"><i class="fas fa-music"></i></button>
-        <button class="icon-btn" id="reset-cam-btn" title="Góc nhìn ban đầu"><i class="fas fa-compress-arrows-alt"></i></button>
     </div>
 
     <div class="click-hint">Chạm vào lồng đèn nhé</div>
@@ -230,14 +264,12 @@
             reader.onload = function(e) {
                 const imageUrl = e.target.result;
                 
-                // Nếu có đối tượng scene trong Three.js (ở file script.js)
                 if (typeof scene !== 'undefined') {
                     const textureLoader = new THREE.TextureLoader();
                     textureLoader.load(imageUrl, function(texture) {
                         scene.background = texture;
                     });
                 } else {
-                    // Dự phòng đổi nền màn hình nếu không dùng Three.js Background
                     document.body.style.backgroundImage = `url('${imageUrl}')`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
