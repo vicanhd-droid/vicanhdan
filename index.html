@@ -11,24 +11,25 @@
     <link rel="stylesheet" href="./assets/css.css">
 
     <style>
-        /* CSS Thanh nút công cụ - Đẩy sang góc trên bên phải, lên lớp trên cùng */
+        /* CSS Thanh 2 nút công cụ - Chuyển xuống góc dưới bên phải */
         .top-bar {
             position: fixed !important;
-            top: 15px !important;
+            bottom: 20px !important;
             right: 15px !important;
+            top: auto !important;
             left: auto !important;
             transform: none !important;
-            z-index: 9999 !important; /* Đảm bảo nằm đè lên trên chữ */
+            z-index: 9999 !important; /* Đảm bảo luôn nằm trên cùng để dễ bấm */
             display: flex;
             gap: 10px;
         }
 
         .icon-btn {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             color: #fff;
             font-size: 16px;
             display: flex;
@@ -154,8 +155,7 @@
         .footer-caption {
             position: absolute;
             bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 15px;
             z-index: 100;
             color: rgba(255, 255, 255, 0.9);
             font-size: 13px;
@@ -163,19 +163,13 @@
             text-shadow: 0 0 8px rgba(224, 86, 253, 0.8);
             pointer-events: none;
             white-space: nowrap;
-            text-align: center;
+            text-align: left;
         }
     </style>
 </head>
 <body>
 
     <div id="webgl-container"></div>
-
-    <!-- Thanh nút nhạc và reset góc nhìn nằm cố định ở góc trên bên phải -->
-    <div class="top-bar">
-        <button class="icon-btn" id="audio-btn" title="Bật/Tắt Nhạc"><i class="fas fa-music"></i></button>
-        <button class="icon-btn" id="reset-cam-btn" title="Góc nhìn ban đầu"><i class="fas fa-compress-arrows-alt"></i></button>
-    </div>
 
     <!-- Khung tiêu đề & Nhập tên chúc Trung Thu -->
     <div class="greeting-box" id="greetingBox">
@@ -202,9 +196,15 @@
         </div>
     </div>
 
+    <!-- 2 Nút nhạc và reset được đưa xuống góc DƯỚI cùng BÊN PHẢI màn hình -->
+    <div class="top-bar">
+        <button class="icon-btn" id="audio-btn" title="Bật/Tắt Nhạc"><i class="fas fa-music"></i></button>
+        <button class="icon-btn" id="reset-cam-btn" title="Góc nhìn ban đầu"><i class="fas fa-compress-arrows-alt"></i></button>
+    </div>
+
     <div class="click-hint">Chạm vào lồng đèn nhé</div>
 
-    <!-- Chú thích chân trang -->
+    <!-- Chú thích chân trang ở góc dưới bên trái -->
     <div class="footer-caption" id="footerCaption">
         🐰 <span id="footerNameText">Vi Canh Dần</span> • Kéo màn hình để xoay cảnh 360° ✨
     </div>
