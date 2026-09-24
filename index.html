@@ -42,6 +42,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
+            flex-wrap: wrap;
         }
 
         #customNameInput {
@@ -53,7 +54,7 @@
             font-size: 14px;
             outline: none;
             backdrop-filter: blur(5px);
-            width: 60%;
+            width: 55%;
             text-align: center;
         }
 
@@ -61,8 +62,8 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .toggle-btn {
-            padding: 8px 16px;
+        .toggle-btn, .sky-upload-btn {
+            padding: 8px 14px;
             border-radius: 20px;
             border: none;
             background: linear-gradient(135deg, #e056fd, #686de0);
@@ -73,9 +74,17 @@
             box-shadow: 0 0 12px rgba(224, 86, 253, 0.6);
             transition: all 0.3s ease;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .toggle-btn:active {
+        .sky-upload-btn {
+            background: linear-gradient(135deg, #00b894, #0984e3);
+            box-shadow: 0 0 12px rgba(9, 132, 227, 0.6);
+        }
+
+        .toggle-btn:active, .sky-upload-btn:active {
             transform: scale(0.95);
         }
 
@@ -90,6 +99,23 @@
 
         .name-display.hidden {
             display: none;
+        }
+
+        /* --- Dòng chữ "Được tạo bởi: Vi Canh Dần" --- */
+        .creator-signature {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 4px;
+            background: linear-gradient(90deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+            animation: gradient-shift 3s infinite linear;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
         .footer-caption {
@@ -119,10 +145,21 @@
         <div class="input-control-group">
             <input type="text" id="customNameInput" placeholder="Nhập tên của bạn..." value="Vi Canh Dần">
             <button class="toggle-btn" id="toggleNameBtn" onclick="toggleNameVisibility()">✨ Hiện tên</button>
+            
+            <!-- Nút chọn ảnh bầu trời -->
+            <label for="skyImageInput" class="sky-upload-btn">
+                🌌 Đổi bầu trời
+            </label>
+            <input type="file" id="skyImageInput" accept="image/*" style="display: none;" onchange="changeSkyBackground(event)">
         </div>
 
         <div class="name-display hidden" id="nameDisplay">
             🐰 <span id="displayNameText">Vi Canh Dần</span>
+        </div>
+
+        <!-- Dòng chữ "Tạo bởi" nổi bật -->
+        <div class="creator-signature">
+            ✨ Tạo bởi: Vi Canh Dần ✨
         </div>
     </div>
 
@@ -159,8 +196,9 @@
     <script src="./assets/OrbitControls.js"></script>
     <script src="./assets/script.js"></script>
 
-    <!-- Script xử lý logic Hiện/Ẩn tên -->
+    <!-- Script xử lý logic -->
     <script>
+        // Bật / Ẩn tên
         function toggleNameVisibility() {
             const input = document.getElementById('customNameInput');
             const nameDisplay = document.getElementById('nameDisplay');
@@ -171,20 +209,42 @@
             const enteredName = input.value.trim() !== '' ? input.value.trim() : 'Vi Canh Dần';
 
             if (nameDisplay.classList.contains('hidden')) {
-                // Đang ẩn -> Chuyển sang HỆN
                 displayNameText.textContent = enteredName;
                 footerNameText.textContent = enteredName;
                 nameDisplay.classList.remove('hidden');
                 btn.textContent = '🙈 Ẩn tên';
                 btn.style.background = 'linear-gradient(135deg, #ff7675, #d63031)';
             } else {
-                // Đang hiện -> Chuyển sang ẨN
                 nameDisplay.classList.add('hidden');
                 btn.textContent = '✨ Hiện tên';
                 btn.style.background = 'linear-gradient(135deg, #e056fd, #686de0)';
             }
         }
+
+        // Đổi ảnh nền bầu trời
+        function changeSkyBackground(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                
+                // Nếu có đối tượng scene trong Three.js (ở file script.js)
+                if (typeof scene !== 'undefined') {
+                    const textureLoader = new THREE.TextureLoader();
+                    textureLoader.load(imageUrl, function(texture) {
+                        scene.background = texture;
+                    });
+                } else {
+                    // Dự phòng đổi nền màn hình nếu không dùng Three.js Background
+                    document.body.style.backgroundImage = `url('${imageUrl}')`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
     </script>
 </body>
-        </html>
-    
+</html>
